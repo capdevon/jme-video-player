@@ -18,9 +18,6 @@ import com.sun.media.jfxmedia.events.VideoRendererListener;
 
 /**
  *
- * Example usage
- * https://github.com/empirephoenix/JME3-JFX/blob/master/src/main/java/com/jme3x/jfx/media/TextureMovie.java
- *
  * Please be sure you do not lose reference to TextureMovie while you need the
  * result texture - if it ever gets garbage collected, movie can stop playing.
  */

@@ -76,17 +76,6 @@ public class TextureMovie {
      *
      * @param app
      * @param mediaPlayer
-     * @param letterboxColor
-     */
-//    public TextureMovie(final Application app, javafx.scene.media.MediaPlayer mediaPlayer, ColorRGBA letterboxColor) {
-//        this(app, mediaPlayer, LetterboxMode.VALID_LETTERBOX);
-//        setLetterboxColor(letterboxColor);
-//    }
-
-    /**
-     *
-     * @param app
-     * @param mediaPlayer
      * @param mode
      */
     public TextureMovie(final Application app, javafx.scene.media.MediaPlayer mediaPlayer, LetterboxMode mode) {

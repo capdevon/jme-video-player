@@ -36,20 +36,20 @@ import jme.video.player.TextureMovie.LetterboxMode;
  * @author capdevon
  */
 public class MovieState extends BaseAppState {
-	
-	private static final Logger logger = Logger.getLogger(MovieState.class.getName());
-	
+
+    private static final Logger logger = Logger.getLogger(MovieState.class.getName());
+
     private static final String KEY_SKIP = "SKIP";
     private InputManager inputManager;
-	
-	private Camera cam;
-	private Node guiNode;
-	private Geometry screenGeom;
-	
-	private String movie;
+
+    private Camera cam;
+    private Node guiNode;
+    private Geometry screenGeom;
+
+    private String movie;
     private TextureMovie textureMovie;
     private MediaPlayer mediaPlayer;
-    
+
     /**
      * 
      * @param movie
@@ -61,48 +61,47 @@ public class MovieState extends BaseAppState {
         }
         this.movie = movie;
     }
-    
-	private final ActionListener actionListener = new ActionListener() {
-		@Override
-		public void onAction(String name, boolean isPressed, float tpf) {
-			// Skip video
-			if (KEY_SKIP.equals(name) && !isPressed) {
-				if (mediaPlayer != null) {
-					mediaPlayer.stop();
-				}
-			}
-		}
-	};
 
-	@Override
-	protected void initialize(Application app) {
-		
-		this.guiNode = ((SimpleApplication) app).getGuiNode();
-		this.inputManager = app.getInputManager();
-		this.cam = app.getCamera();
-		int width = cam.getWidth();
-		int height = cam.getHeight();
-		
-		// Assign video skipping keys
+    private final ActionListener actionListener = new ActionListener() {
+        @Override
+        public void onAction(String name, boolean isPressed, float tpf) {
+            // Skip video
+            if (KEY_SKIP.equals(name) && !isPressed) {
+                if (mediaPlayer != null) {
+                    mediaPlayer.stop();
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void initialize(Application app) {
+
+        this.guiNode = ((SimpleApplication) app).getGuiNode();
+        this.inputManager = app.getInputManager();
+        this.cam = app.getCamera();
+        int width = cam.getWidth();
+        int height = cam.getHeight();
+
+        // Assign video skipping keys
         inputManager.addMapping(KEY_SKIP, new KeyTrigger(KeyInput.KEY_SPACE), new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addListener(actionListener, KEY_SKIP);
-		
-		// Start javafx
+
+        // Start javafx
         PlatformImpl.startup(new Runnable() {
             @Override
-            public void run() {
-            }
+            public void run() {}
         });
 
         URI videoUri = new File(movie).toURI();
         logger.log(Level.INFO, "Video URI: " + videoUri.getPath());
-        
+
         Media media = new Media(videoUri.toASCIIString());
         media.errorProperty().addListener(new ChangeListener<MediaException>() {
 
             @Override
             public void changed(final ObservableValue<? extends MediaException> observable,
-                    final MediaException oldValue, final MediaException newValue) {
+                final MediaException oldValue, final MediaException newValue) {
                 newValue.printStackTrace();
             }
         });
@@ -122,7 +121,7 @@ public class MovieState extends BaseAppState {
         mediaPlayer.setOnEndOfMedia(new Runnable() {
             @Override
             public void run() {
-            	mediaPlayer.stop();
+                mediaPlayer.stop();
             }
         });
 
@@ -131,36 +130,36 @@ public class MovieState extends BaseAppState {
 
         // Setup camera location to watch video intro
         cam.setLocation(new Vector3f(10, 10, 15));
-        
+
         mediaPlayer.play();
-	}
-	
-	@Override
-	protected void cleanup(Application app) {
-		// Clean our mapping
-		inputManager.deleteMapping(KEY_SKIP);
-		inputManager.removeListener(actionListener);
+    }
 
-		// Dispose the video
-		mediaPlayer.dispose();
-		// Detach video screen
-		guiNode.detachChild(screenGeom);
-		// Reset camera location
-		cam.setLocation(new Vector3f(0, 0, 0));
-		// Stop javafx
-		PlatformImpl.exit();
-	}
+    @Override
+    protected void cleanup(Application app) {
+        // Clean our mapping
+        inputManager.deleteMapping(KEY_SKIP);
+        inputManager.removeListener(actionListener);
 
-	@Override
-	protected void onEnable() {
-		// TODO Auto-generated method stub
-	}
+        // Dispose the video
+        mediaPlayer.dispose();
+        // Detach video screen
+        guiNode.detachChild(screenGeom);
+        // Reset camera location
+        cam.setLocation(new Vector3f(0, 0, 0));
+        // Stop javafx
+        PlatformImpl.exit();
+    }
 
-	@Override
-	protected void onDisable() {
-		// TODO Auto-generated method stub
-	}
-	
+    @Override
+    protected void onEnable() {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    protected void onDisable() {
+        // TODO Auto-generated method stub
+    }
+
     public boolean isStopped() {
         return mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED;
     }

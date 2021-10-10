@@ -3,6 +3,7 @@ package mygame;
 import com.jme3.app.SimpleApplication;
 import com.jme3.system.AppSettings;
 
+import jme.video.player.MovieSettings;
 import jme.video.player.MovieState;
 
 /**
@@ -23,7 +24,6 @@ public class Test_MovieState extends SimpleApplication {
         // Setup window settings
         AppSettings settings = new AppSettings(true);
         settings.setResolution(1280, 720);
-        settings.setFrameRate(30);
 
         app.setSettings(settings);
         app.setPauseOnLostFocus(false);
@@ -34,8 +34,9 @@ public class Test_MovieState extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         try {
-            String fileVideo = "src/main/resources/Videos/jme3_intro.mp4";
-            movieState = new MovieState(fileVideo);
+            String path = "src/main/resources/Videos/jme3_intro.mp4";
+            MovieSettings movie = new MovieSettings(path, cam.getWidth(), cam.getHeight(), 0.8f, true);
+            movieState = new MovieState(movie);
             stateManager.attach(movieState);
 
             // Prevent cam from moving while outside of game instance

@@ -2,10 +2,9 @@ package jme.video.player;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.jme3.app.Application;
@@ -18,7 +17,6 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
@@ -39,64 +37,47 @@ public class MovieState extends BaseAppState {
 
     private static final Logger logger = Logger.getLogger(MovieState.class.getName());
 
-    private static final String KEY_SKIP = "SKIP";
+    private static final String KEY_SKIP = "SKIP_VIDEO";
     private InputManager inputManager;
-
-    private Camera cam;
     private Node guiNode;
-    private Geometry screenGeom;
-
-    private String movie;
+    private Geometry screen;
     private TextureMovie textureMovie;
     private MediaPlayer mediaPlayer;
+    private MovieSettings movie;
 
     /**
      * 
      * @param movie
      * @throws FileNotFoundException
      */
-    public MovieState(String movie) throws FileNotFoundException {
-        if (!Files.exists(Paths.get(movie))) {
+    public MovieState(MovieSettings movie) throws FileNotFoundException {
+        Path path = Paths.get(movie.getPath());
+        if (!Files.exists(path)) {
             throw new FileNotFoundException("Movie file not found!");
         }
         this.movie = movie;
     }
-
-    private final ActionListener actionListener = new ActionListener() {
-        @Override
-        public void onAction(String name, boolean isPressed, float tpf) {
-            // Skip video
-            if (KEY_SKIP.equals(name) && !isPressed) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.stop();
-                }
-            }
-        }
-    };
 
     @Override
     protected void initialize(Application app) {
 
         this.guiNode = ((SimpleApplication) app).getGuiNode();
         this.inputManager = app.getInputManager();
-        this.cam = app.getCamera();
-        int width = cam.getWidth();
-        int height = cam.getHeight();
-
-        // Assign video skipping keys
-        inputManager.addMapping(KEY_SKIP, new KeyTrigger(KeyInput.KEY_SPACE), new KeyTrigger(KeyInput.KEY_RETURN));
-        inputManager.addListener(actionListener, KEY_SKIP);
 
         // Start javafx
-        PlatformImpl.startup(new Runnable() {
-            @Override
-            public void run() {}
-        });
+        PlatformImpl.startup(() -> {});
 
-        URI videoUri = new File(movie).toURI();
-        logger.log(Level.INFO, "Video URI: " + videoUri.getPath());
+        startVideo(app);
+    }
 
-        Media media = new Media(videoUri.toASCIIString());
+    private void startVideo(Application app) {
+
+        int width = movie.getWidth();
+        int height = movie.getHeight();
+        float zoomingFactor = movie.getZoomingFactor();
+
+        File f = new File(movie.getPath());
+        Media media = new Media(f.toURI().toASCIIString());
         media.errorProperty().addListener(new ChangeListener<MediaException>() {
 
             @Override
@@ -111,11 +92,14 @@ public class MovieState extends BaseAppState {
         textureMovie = new TextureMovie(app, mediaPlayer, LetterboxMode.VALID_LETTERBOX);
         textureMovie.setLetterboxColor(ColorRGBA.Black);
 
+        float quadWidth = width * zoomingFactor;
+        float quadHeight = height * zoomingFactor;
+
         // Draw video screen inside game
-        screenGeom = new Geometry("Screen", new Quad(width, height));
+        screen = new Geometry("Screen", new Quad(quadWidth, quadHeight));
         Material mat = new Material(app.getAssetManager(), "Shaders/MovieShader.j3md");
         mat.setTexture("ColorMap", textureMovie.getTexture());
-        screenGeom.setMaterial(mat);
+        screen.setMaterial(mat);
 
         // Stop video player when intro ends
         mediaPlayer.setOnEndOfMedia(new Runnable() {
@@ -125,40 +109,50 @@ public class MovieState extends BaseAppState {
             }
         });
 
+        // Setup screen location
+        int offsetX = (int) ((quadWidth - width) / 2f);
+        int offsetY = (int) ((quadHeight - height) / 2f);
+        screen.setLocalTranslation(new Vector3f(-offsetX, -offsetY, 1));
+
         // Add video screen to game
-        guiNode.attachChild(screenGeom);
+        guiNode.attachChild(screen);
 
-        // Setup camera location to watch video intro
-        cam.setLocation(new Vector3f(10, 10, 15));
-
+        // Play video
         mediaPlayer.play();
     }
 
     @Override
     protected void cleanup(Application app) {
-        // Clean our mapping
-        inputManager.deleteMapping(KEY_SKIP);
-        inputManager.removeListener(actionListener);
-
-        // Dispose the video
+        // Free all resources associated with player
         mediaPlayer.dispose();
         // Detach video screen
-        guiNode.detachChild(screenGeom);
-        // Reset camera location
-        cam.setLocation(new Vector3f(0, 0, 0));
+        guiNode.detachChild(screen);
         // Stop javafx
         PlatformImpl.exit();
     }
 
     @Override
     protected void onEnable() {
-        // TODO Auto-generated method stub
+        // Assign video skipping keys
+        inputManager.addMapping(KEY_SKIP, new KeyTrigger(KeyInput.KEY_SPACE), new KeyTrigger(KeyInput.KEY_RETURN));
+        inputManager.addListener(actionListener, KEY_SKIP);
     }
 
     @Override
     protected void onDisable() {
-        // TODO Auto-generated method stub
+        // Clean our mapping
+        inputManager.deleteMapping(KEY_SKIP);
+        inputManager.removeListener(actionListener);
     }
+
+    private final ActionListener actionListener = new ActionListener() {
+        @Override
+        public void onAction(String name, boolean isPressed, float tpf) {
+            if (KEY_SKIP.equals(name) && !isPressed && movie.isSkippable()) {
+                mediaPlayer.stop();
+            }
+        }
+    };
 
     public boolean isStopped() {
         return mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED;

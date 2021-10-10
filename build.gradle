@@ -1,7 +1,18 @@
 plugins {
     id 'application'
-    // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+javafx {
+    version = '17'
+    modules = [
+        'javafx.base',
+        'javafx.controls',
+        'javafx.fxml',
+        'javafx.swing',
+        'javafx.media'
+    ]
 }
 
 description = 'JME Video Player'
@@ -60,7 +71,7 @@ dependencies {
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion  // LWJGL 2.x
     //runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmonkeyengineVersion // LWJGL 3.x
 
-    // BasicGame doesn't use physics. If your game needs physics, select either:
+    // If your game needs physics, select either:
     //    1. Minie
     //implementation 'com.github.stephengold:Minie:4.3.0'
     // OR
@@ -81,10 +92,7 @@ dependencies {
     // other libraries:
     //implementation 'com.github.stephengold:Heart:7.1.0'
     //implementation 'com.simsilica:sim-math:1.4.1'
-    //runtimeOnly 'org.jmonkeyengine:jme3-testdata:' + jmonkeyengineVersion
-    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.4.0-alpha6'
-
-    compile fileTree(dir: 'libs', include: '*.jar')
+    runtimeOnly 'org.jmonkeyengine:jme3-testdata:' + jmonkeyengineVersion
     
 }
 

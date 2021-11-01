@@ -48,7 +48,7 @@ repositories {
     //mavenLocal()
     mavenCentral()
     maven { url 'https://jcenter.bintray.com/' }
-    maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo' }
+    //maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo' }
     //google()
 
     // Read more about repositories here:
@@ -59,15 +59,15 @@ dependencies {
     // You can read more about how to add dependencies here:
     //   https://docs.gradle.org/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
 
-    // from mavenCentral (or mavenLocal) repositories:
+    // jMonkey:
     implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-effects:' + jmonkeyengineVersion
     //implementation 'org.jmonkeyengine:jme3-networking:' + jmonkeyengineVersion
-    implementation 'org.jmonkeyengine:jme3-niftygui:' + jmonkeyengineVersion
+    //implementation 'org.jmonkeyengine:jme3-niftygui:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-terrain:' + jmonkeyengineVersion
 
-    // select one version of LWJGL (from mavenCentral or mavenLocal)
+    // select one version of LWJGL
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion  // LWJGL 2.x
     //runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmonkeyengineVersion // LWJGL 3.x
 

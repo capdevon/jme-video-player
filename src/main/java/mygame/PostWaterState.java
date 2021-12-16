@@ -50,9 +50,8 @@ public class PostWaterState extends BaseAppState implements ActionListener {
     private InputManager inputManager;
 
     private final Vector3f lightDir = new Vector3f(-4.9236743f, -1.27054665f, 5.896916f);
-    private final LowPassFilter aboveWaterAudioFilter = new LowPassFilter(1, 1);
     private WaterFilter water;
-    private AudioNode waves;
+    private AudioNode audioWaves;
     private Node mainScene;
     private FilterPostProcessor fpp;
 
@@ -131,18 +130,12 @@ public class PostWaterState extends BaseAppState implements ActionListener {
             fpp.setNumSamples(numSamples);
         }
 
-        // 5. Create Audio VFX
-        waves = new AudioNode(assetManager, "Sound/Environment/Ocean Waves.ogg", DataType.Buffer);
-        waves.setLooping(true);
-        waves.setReverbEnabled(true);
-
-        uw = cam.getLocation().y < waterHeight;
-        if (uw) {
-            waves.setDryFilter(new LowPassFilter(0.5f, 0.1f));
-        } else {
-            waves.setDryFilter(aboveWaterAudioFilter);
-        }
-        app.getAudioRenderer().playSource(waves);
+        // 5. Create Audio SFX
+        audioWaves = new AudioNode(assetManager, "Sound/Environment/Ocean Waves.ogg", DataType.Buffer);
+        audioWaves.setLooping(true);
+        audioWaves.setReverbEnabled(true);
+        audioWaves.setDryFilter(new LowPassFilter(1, 1));
+        audioWaves.play();
 
         // 6. Configure Camera and Inputs
         configCamera(cam);
@@ -163,7 +156,7 @@ public class PostWaterState extends BaseAppState implements ActionListener {
         addMapping("downRM", new KeyTrigger(KeyInput.KEY_PGDN));
     }
 
-    private void addMapping(String bindingName, Trigger...triggers) {
+    private void addMapping(String bindingName, Trigger... triggers) {
         inputManager.addMapping(bindingName, triggers);
         inputManager.addListener(this, bindingName);
     }
@@ -260,13 +253,12 @@ public class PostWaterState extends BaseAppState implements ActionListener {
         water.setWaterHeight(initialWaterHeight + waterHeight);
 
         if (water.isUnderWater() && !uw) {
-            waves.setDryFilter(new LowPassFilter(0.5f, 0.1f));
             uw = true;
+            audioWaves.setReverbEnabled(false);
         }
         if (!water.isUnderWater() && uw) {
             uw = false;
-            // waves.setReverbEnabled(false);
-            waves.setDryFilter(new LowPassFilter(1, 1f));
+            audioWaves.setReverbEnabled(true);
         }
     }
 

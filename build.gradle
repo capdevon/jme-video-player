@@ -22,7 +22,7 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 // select one version of the Engine:
-ext.jmeVersion = '3.4.1-stable' // from mavenCentral
+ext.jmeVersion = '3.5.1-stable' // from mavenCentral
 
 tasks.withType(JavaCompile) { // Java compile-time options:
     options.compilerArgs << '-Xdiags:verbose'
@@ -73,7 +73,7 @@ dependencies {
 
     // If your game needs physics, select either:
     //    1. Minie
-    //implementation 'com.github.stephengold:Minie:4.6.0'
+    //implementation 'com.github.stephengold:Minie:4.8.1'
     // OR
     //    2. jme3-jbullet
     //implementation 'org.jmonkeyengine:jme3-jbullet:' + jmeVersion

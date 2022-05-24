@@ -10,6 +10,8 @@
 - [Destructible Wall Generator](https://www.youtube.com/watch?v=Vp7nPncpZqs)
 
 ### How to build 
+- Download jdk-17 from : 
+https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
 - Clone locally.
 ```bash
 cd ./Gradle-Projects

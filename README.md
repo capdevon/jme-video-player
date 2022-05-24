@@ -37,3 +37,14 @@ git clone https://github.com/capdevon/jme-video-player.git
 ```bash
 ./gradlew -stop
 ```
+### How to build on Windows
+- Use the same commands with the same steps, but change `./gradlew` with `gradle`:
+```bash
+gradle build --stacktrace
+```
+```bash
+gradle run --stacktrace
+```
+```bash
+gradle -stop
+```

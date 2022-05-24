@@ -63,7 +63,7 @@ dependencies {
 
     // Physics
     implementation 'com.github.stephengold:Minie:4.9.0+big3'
-    
+
     // select one version of LWJGL
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmeVersion  // LWJGL 2.x
     //runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmeVersion // LWJGL 3.x
@@ -71,7 +71,22 @@ dependencies {
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmeVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmeVersion
     runtimeOnly 'org.jmonkeyengine:jme3-testdata:' + jmeVersion
-    
+
+}
+
+run {
+    /* define your main class here */
+    mainClassName = 'mygame.Test_BrickWall'
+    /*
+     * Opens : allows a module to open one of its packages to a <target-module>, regardless of the module declaration.
+     * Exports : exports other jfx module to the UN-NAMED modules
+     * For more : https://docs.oracle.com/javase/9/migrate/toc.htm#JSMIG-GUID-7744EF96-5899-4FB2-B34E-86D49B2E89B6
+     */
+    jvmArgs = ['--add-opens=javafx.media/javafx.scene.media=ALL-UNNAMED',
+               '--add-exports=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
+               '--add-exports=javafx.media/com.sun.media.jfxmedia=ALL-UNNAMED',
+               '--add-exports=javafx.media/com.sun.media.jfxmedia.events=ALL-UNNAMED',
+               '--add-exports=javafx.media/com.sun.media.jfxmedia.control=ALL-UNNAMED']
 }
 
 // cleanup tasks

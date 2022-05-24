@@ -17,12 +17,23 @@ https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
 cd ./Gradle-Projects
 git clone https://github.com/capdevon/jme-video-player.git
 ```
-- Run gradle build script.
+- Run gradle build script:
 ```bash
 ./gradlew build
 ```
 - Change the `mainClassName` to your favourite demo class in the `build.gradle`.
-- Now test by running the gradle run task.
+- Now test by running the gradle run task:
 ```bash
 ./gradlew run
+```
+- To visualize the stacktrace, add `--stacktrace` to the above commands:
+```bash
+./gradlew build --stacktrace
+```
+```bash
+./gradlew run --stacktrace
+```
+- To stop the daemon process, use stop:
+```bash
+./gradlew -stop
 ```

@@ -57,7 +57,6 @@ tasks.withType(JavaExec) { // Java runtime options:
 
 repositories {
     mavenCentral()
-    //maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo' }
 }
 
 dependencies {
@@ -68,13 +67,11 @@ dependencies {
     implementation 'org.jmonkeyengine:jme3-core:' + jmeVersion
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmeVersion
     implementation 'org.jmonkeyengine:jme3-effects:' + jmeVersion
-    //implementation 'org.jmonkeyengine:jme3-networking:' + jmeVersion
-    //implementation 'org.jmonkeyengine:jme3-niftygui:' + jmeVersion
     implementation 'org.jmonkeyengine:jme3-terrain:' + jmeVersion
-    runtimeOnly    'org.jmonkeyengine:jme3-awt-dialogs:' + jmeVersion // JMonkeyEngine v3.6 only!
+    runtimeOnly    'org.jmonkeyengine:jme3-awt-dialogs:' + jmeVersion
 
     // Physics
-    implementation 'com.github.stephengold:Minie:7.4.0+big3'
+    implementation 'com.github.stephengold:Minie:7.6.0+big3'
 
     // select one version of LWJGL
     // runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmeVersion  // LWJGL 2.x

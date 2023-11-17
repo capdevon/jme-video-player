@@ -71,7 +71,7 @@ dependencies {
     runtimeOnly    'org.jmonkeyengine:jme3-awt-dialogs:' + jmeVersion
 
     // Physics
-    implementation 'com.github.stephengold:Minie:7.6.0+big3'
+    implementation 'com.github.stephengold:Minie:7.7.0+big3'
 
     // select one version of LWJGL
     // runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmeVersion  // LWJGL 2.x
@@ -80,9 +80,7 @@ dependencies {
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmeVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmeVersion
     runtimeOnly 'org.jmonkeyengine:jme3-testdata:' + jmeVersion
-
 }
-
 
 // cleanup tasks
 clean.dependsOn('cleanDLLs', 'cleanDyLibs', 'cleanLogs', 'cleanSOs')

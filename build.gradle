@@ -23,7 +23,7 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 // select one version of the Engine:
-ext.jmeVersion = '3.6.1-stable' // from mavenCentral
+ext.jmeVersion = '3.7.0-stable' // from mavenCentral
 
 tasks.withType(JavaCompile) { // Java compile-time options:
     options.compilerArgs << '-Xdiags:verbose'

@@ -18,9 +18,9 @@ javafx {
 mainClassName = 'mygame.Test_BrickWall'
 description = 'JME Video Player'
 
-// select one source-code (JDK) option:
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+// select one source-code (JDK) option
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 // select one version of the Engine:
 ext.jmeVersion = '3.6.1-stable' // from mavenCentral
@@ -71,7 +71,7 @@ dependencies {
     runtimeOnly    'org.jmonkeyengine:jme3-awt-dialogs:' + jmeVersion
 
     // Physics
-    implementation 'com.github.stephengold:Minie:8.1.0+big3'
+    implementation 'com.github.stephengold:Minie:8.2.0+big4'
 
     // select one version of LWJGL
     // runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmeVersion  // LWJGL 2.x

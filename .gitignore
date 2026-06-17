@@ -1,5 +1,21 @@
-/.gradle/
-/build/
-/*.dll
-/*.dylib
-/*.so
+# --- Gradle ---
+.gradle/
+build/
+
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+*.dll
+*.dylib
+*.so
+*.dll.a
+*.lib
+
+hs_err_pid*.log
+replay_pid*.log
+*.log
+
+.DS_Store

@@ -1,7 +1,8 @@
 # jme-video-player
 
 [![Java Support](https://img.shields.io/badge/Java-11-orange.svg)](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-[![jMonkeyEngine](https://img.shields.io/badge/jMonkeyEngine-3.8.1--stable-blue.svg)](https://jmonkeyengine.org/)
+[![jMonkeyEngine](https://img.shields.io/badge/jMonkeyEngine-3.9.0--stable-blue.svg)](https://jmonkeyengine.org/)
+[![jMonkeyEngine](https://img.shields.io/badge/Minie-9.0.3-blue.svg)](https://jmonkeyengine.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 A media playback integration for **jMonkeyEngine 3** supporting video rendering on textures, bundled with specific gameplay utilities and demos.

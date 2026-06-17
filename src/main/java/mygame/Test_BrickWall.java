@@ -55,14 +55,10 @@ import jme.video.player.TextureMovie;
  */
 public class Test_BrickWall extends SimpleApplication implements ActionListener {
 
-    /**
-     *
-     * @param args
-     */
     public static void main(String[] args) {
         Test_BrickWall app = new Test_BrickWall();
         AppSettings settings = new AppSettings(true);
-        settings.setResolution(1280, 720);
+        settings.setResolution(800, 600);
         app.setSettings(settings);
 
         app.setShowSettings(false);

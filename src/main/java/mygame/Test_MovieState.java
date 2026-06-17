@@ -14,16 +14,12 @@ public class Test_MovieState extends SimpleApplication {
 
     private MovieState movieState;
 
-    /**
-     * 
-     * @param args
-     */
     public static void main(String[] args) {
         Test_MovieState app = new Test_MovieState();
 
         // Setup window settings
         AppSettings settings = new AppSettings(true);
-        settings.setResolution(1280, 720);
+        settings.setResolution(800, 600);
 
         app.setSettings(settings);
         app.setPauseOnLostFocus(false);

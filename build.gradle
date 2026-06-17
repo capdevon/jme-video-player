@@ -1,7 +1,49 @@
 plugins {
     id 'application'
     id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'maven-publish'
+}
+
+group = 'com.github.capdevon'
+version = '1.0.0-SNAPSHOT'
+description = 'JME Video Player'
+
+application {
+    mainClass = 'mygame.Test_BrickWall'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+    
+    withSourcesJar()
+    withJavadocJar()
+}
+
+project.ext {
+    jmeVersion = '3.9.0-stable'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xdiags:verbose'
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaExec).configureEach {
+    enableAssertions = true
+    jvmArgs(
+        '-XX:+UseG1GC', 
+        '-XX:MaxGCPauseMillis=10',
+        '--add-opens=javafx.media/javafx.scene.media=ALL-UNNAMED',
+        '--add-exports=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
+        '--add-exports=javafx.media/com.sun.media.jfxmedia=ALL-UNNAMED',
+        '--add-exports=javafx.media/com.sun.media.jfxmedia.events=ALL-UNNAMED',
+        '--add-exports=javafx.media/com.sun.media.jfxmedia.control=ALL-UNNAMED'
+    )
 }
 
 javafx {
@@ -15,86 +57,61 @@ javafx {
     ]
 }
 
-mainClassName = 'mygame.Test_BrickWall'
-description = 'JME Video Player'
-
-// select one source-code (JDK) option
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-
-// select one version of the Engine:
-ext.jmeVersion = '3.8.1-stable' // from mavenCentral
-
-tasks.withType(JavaCompile) { // Java compile-time options:
-    options.compilerArgs << '-Xdiags:verbose'
-    options.compilerArgs << '-Xlint:unchecked'
-    options.deprecation = true
-    options.encoding = 'UTF-8'
-}
-
-tasks.withType(JavaExec) { // Java runtime options:
-    args = []
-    classpath sourceSets.main.runtimeClasspath
-    //debug true
-    enableAssertions true
-    //jvmArgs '-verbose:gc'
-    //jvmArgs '-Xbatch'
-    //jvmArgs '-Xms256m', '-Xmx256m'
-    //jvmArgs '-XX:+PrintCompilation'
-    //jvmArgs '-XX:+UseConcMarkSweepGC'
-    jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=10'
-    /*
-     * Opens : allows a module to open one of its packages to a <target-module>, regardless of the module declaration.
-     * Exports : exports other jfx module to the UN-NAMED modules
-     * For more : https://docs.oracle.com/javase/9/migrate/toc.htm#JSMIG-GUID-7744EF96-5899-4FB2-B34E-86D49B2E89B6
-     */
-    jvmArgs = ['--add-opens=javafx.media/javafx.scene.media=ALL-UNNAMED',
-               '--add-exports=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
-               '--add-exports=javafx.media/com.sun.media.jfxmedia=ALL-UNNAMED',
-               '--add-exports=javafx.media/com.sun.media.jfxmedia.events=ALL-UNNAMED',
-               '--add-exports=javafx.media/com.sun.media.jfxmedia.control=ALL-UNNAMED']
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // You can read more about how to add dependencies here:
-    //   https://docs.gradle.org/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+    // jMonkeyEngine core & desktop
+    implementation "org.jmonkeyengine:jme3-core:${jmeVersion}"
+    implementation "org.jmonkeyengine:jme3-desktop:${jmeVersion}"
+    implementation "org.jmonkeyengine:jme3-effects:${jmeVersion}"
+    implementation "org.jmonkeyengine:jme3-terrain:${jmeVersion}"
+    
+    if (!System.getProperty("os.name").toLowerCase().contains("mac")) {
+        runtimeOnly "org.jmonkeyengine:jme3-awt-dialogs:${jmeVersion}"
+    }
 
-    // jMonkeyEngine
-    implementation 'org.jmonkeyengine:jme3-core:' + jmeVersion
-    implementation 'org.jmonkeyengine:jme3-desktop:' + jmeVersion
-    implementation 'org.jmonkeyengine:jme3-effects:' + jmeVersion
-    implementation 'org.jmonkeyengine:jme3-terrain:' + jmeVersion
-    runtimeOnly    'org.jmonkeyengine:jme3-awt-dialogs:' + jmeVersion
+    implementation 'com.github.stephengold:Minie:9.0.3+big4'
 
-    // Physics
-    implementation 'com.github.stephengold:Minie:9.0.1+big4'
+    // LWJGL 3 backend
+    runtimeOnly "org.jmonkeyengine:jme3-lwjgl3:${jmeVersion}"
 
-    // select one version of LWJGL
-    // runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmeVersion  // LWJGL 2.x
-    runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmeVersion // LWJGL 3.x
-
-    runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmeVersion
-    runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmeVersion
-    runtimeOnly 'org.jmonkeyengine:jme3-testdata:' + jmeVersion
+    // Audio & Plugins runtime
+    runtimeOnly "org.jmonkeyengine:jme3-jogg:${jmeVersion}"
+    runtimeOnly "org.jmonkeyengine:jme3-plugins:${jmeVersion}"
+    runtimeOnly "org.jmonkeyengine:jme3-testdata:${jmeVersion}"
 }
 
-// cleanup tasks
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+tasks.register('install') {
+    group = 'publishing'
+    description = 'Installs the plugin to the local Maven repository.'
+    dependsOn tasks.named('publishToMavenLocal')
+
+    doLast {
+        println "\n[SUCCESS] ${project.group}:${project.name}:${project.version} installed to Maven Local."
+    }
+}
+
 clean.dependsOn('cleanDLLs', 'cleanDyLibs', 'cleanLogs', 'cleanSOs')
-task cleanDLLs(type: Delete) {
+
+tasks.register('cleanDLLs', Delete) {
     delete fileTree(dir: '.', include: '*.dll')
 }
-task cleanDyLibs(type: Delete) {
+tasks.register('cleanDyLibs', Delete) {
     delete fileTree(dir: '.', include: '*.dylib')
 }
-task cleanLogs(type: Delete) {
+tasks.register('cleanLogs', Delete) {
     delete fileTree(dir: '.', include: 'hs_err_pid*.log')
 }
-task cleanSOs(type: Delete) {
+tasks.register('cleanSOs', Delete) {
     delete fileTree(dir: '.', include: '*.so')
 }
-
-
